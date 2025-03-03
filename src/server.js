@@ -11,6 +11,8 @@ const reportRoutes = require("./routes/reportRoutes");
 const currencyRoutes = require("./routes/currencyRoutes");
 const goalRoutes = require("./routes/goalRoutes");
 const trendRoutes = require("./routes/trendRoutes");
+const exportRoutes = require("./routes/exportRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 
 dotenv.config();
 connectDB();
@@ -29,6 +31,8 @@ app.use("/api/reports", reportRoutes);
 app.use("/api/currency", currencyRoutes);
 app.use("/api/goals", goalRoutes);
 app.use("/api/trends", trendRoutes);
+app.use("/api/export", exportRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

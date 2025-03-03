@@ -1,0 +1,13 @@
+Transaction ID,Type,Amount,Category,Description,Date
+67c5eb2b3dc588c958282d45,expense,60,Groceries,Updated Dinner at a Restaurant,2025-03-03T17:47:23.212Z
+67c5f819c74f788a3ca089ed,expense,100,Groceries,Grocery shopping,2025-03-03T18:42:33.927Z
+67c5f974c74f788a3ca089f1,expense,50,Shopping,Netflix Subscription,2025-03-03T18:48:20.037Z
+67c603251468ee5a6e86fc8c,income,1000,Investments,Salary,2025-03-03T19:29:41.724Z
+67c607ce1468ee5a6e86fc98,expense,80,Groceries,Transport,2025-03-03T19:49:34.634Z
+67c607f91468ee5a6e86fc9c,expense,150,Groceries,Groceries,2025-03-03T19:50:17.130Z
+67c608081468ee5a6e86fca0,expense,200,Groceries,Entertainment,2025-03-03T19:50:32.988Z
+67c615657922abe7ba30b724,expense,300,Groceries,Groceries for testing,2025-03-03T20:47:33.888Z
+67c615af7922abe7ba30b728,expense,400,Groceries,clothes,2025-03-03T20:48:47.012Z
+67c615c27922abe7ba30b72c,expense,200,Groceries,Transport,2025-03-03T20:49:06.772Z
+67c615cc7922abe7ba30b730,expense,300,Groceries,Transport,2025-03-03T20:49:16.744Z
+67c616657922abe7ba30b734,income,1300,Investments,Salary,2025-03-03T20:51:49.596Z
