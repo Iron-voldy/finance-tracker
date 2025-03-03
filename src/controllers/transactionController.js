@@ -1,5 +1,6 @@
 const Transaction = require("../models/transactionModel");
 const Category = require("../models/categoryModel");
+const { processRecurringTransactions } = require("../services/transactionService");
 
 // ✅ Create a New Transaction with Category Validation
 exports.createTransaction = async (req, res) => {
@@ -19,7 +20,8 @@ exports.createTransaction = async (req, res) => {
             category: categoryId, // ✅ Store category as ObjectId
             description,
             isRecurring,
-            recurringInterval
+            recurringInterval,
+            nextRecurringDate: isRecurring ? calculateNextDate(recurringInterval) : null // ✅ Set next recurring date
         });
 
         await transaction.save();
@@ -63,7 +65,7 @@ exports.updateTransaction = async (req, res) => {
             return res.status(404).json({ msg: "Transaction not found" });
         }
 
-        const { amount, categoryId, description } = req.body;
+        const { amount, categoryId, description, isRecurring, recurringInterval } = req.body;
 
         // ✅ Validate category change
         if (categoryId) {
@@ -76,6 +78,13 @@ exports.updateTransaction = async (req, res) => {
 
         if (amount) transaction.amount = amount;
         if (description) transaction.description = description;
+
+        // ✅ Handle Recurring Transactions Update
+        if (isRecurring !== undefined) {
+            transaction.isRecurring = isRecurring;
+            transaction.recurringInterval = isRecurring ? recurringInterval : null;
+            transaction.nextRecurringDate = isRecurring ? calculateNextDate(recurringInterval) : null;
+        }
 
         await transaction.save();
         res.json({ msg: "Transaction updated successfully", transaction });
@@ -97,4 +106,39 @@ exports.deleteTransaction = async (req, res) => {
     } catch (error) {
         res.status(500).json({ msg: "Server Error", error: error.message });
     }
+};
+
+// ✅ Get Upcoming Recurring Transactions
+exports.getUpcomingRecurringTransactions = async (req, res) => {
+    try {
+        const upcomingTransactions = await Transaction.find({
+            user: req.user,
+            isRecurring: true,
+            nextRecurringDate: { $gte: new Date() }
+        }).sort({ nextRecurringDate: 1 });
+
+        res.json(upcomingTransactions);
+    } catch (error) {
+        res.status(500).json({ msg: "Server Error", error: error.message });
+    }
+};
+
+// ✅ Run Recurring Transaction Processing
+exports.runRecurringTransactions = async (req, res) => {
+    try {
+        await processRecurringTransactions();
+        res.json({ msg: "Recurring transactions processed successfully" });
+    } catch (error) {
+        res.status(500).json({ msg: "Server Error", error: error.message });
+    }
+};
+
+// ✅ Helper Function: Calculate Next Recurring Date
+const calculateNextDate = (interval) => {
+    const now = new Date();
+    if (interval === "daily") return new Date(now.setDate(now.getDate() + 1));
+    if (interval === "weekly") return new Date(now.setDate(now.getDate() + 7));
+    if (interval === "monthly") return new Date(now.setMonth(now.getMonth() + 1));
+    if (interval === "yearly") return new Date(now.setFullYear(now.getFullYear() + 1));
+    return null;
 };
