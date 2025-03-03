@@ -1,12 +1,10 @@
 const Transaction = require("../models/transactionModel");
 const mongoose = require("mongoose");
 
-// ✅ Get Monthly Spending Analysis
 exports.getMonthlySpending = async (userId) => {
     const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
     
-    // Convert userId to ObjectId
     const userObjectId = new mongoose.Types.ObjectId(userId);
     
     return await Transaction.aggregate([

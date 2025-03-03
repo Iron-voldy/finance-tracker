@@ -1,7 +1,6 @@
 const Transaction = require("../models/transactionModel");
 const User = require("../models/userModel");
 
-// ✅ Get Admin Dashboard
 exports.getAdminDashboard = async (req, res) => {
     try {
         const totalUsers = await User.countDocuments();
@@ -20,7 +19,6 @@ exports.getAdminDashboard = async (req, res) => {
     }
 };
 
-// ✅ Get User Dashboard
 exports.getUserDashboard = async (req, res) => {
     try {
         const totalTransactions = await Transaction.countDocuments({ user: req.user._id });

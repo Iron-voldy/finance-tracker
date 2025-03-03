@@ -3,7 +3,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 
-// ✅ Register User with Role
 exports.registerUser = async (req, res) => {
     const { name, email, password, role } = req.body;
 
@@ -31,7 +30,6 @@ exports.registerUser = async (req, res) => {
     }
 };
 
-// ✅ Login User with Role
 exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
 

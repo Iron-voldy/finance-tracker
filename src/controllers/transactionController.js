@@ -4,7 +4,6 @@ const { processRecurringTransactions } = require("../services/transactionService
 const { createNotification, checkBudgetExceeded } = require("../services/notificationService");
 const Budget = require("../models/budgetModel");
 
-// ✅ Create a New Transaction with Category Validation
 exports.createTransaction = async (req, res) => {
     try {
         const { type, amount, categoryId, description, isRecurring, recurringInterval } = req.body;
@@ -27,12 +26,10 @@ exports.createTransaction = async (req, res) => {
 
         await transaction.save();
 
-        // ✅ Send Income Notification
         if (type === "income") {
             await createNotification(req.user, `You received an income of $${amount}.`, "income");
         }
 
-        // ✅ Check Budget Exceeded
         if (type === "expense") {
             const budget = await Budget.findOne({ user: req.user, category: categoryId });
             if (budget) {
@@ -48,11 +45,10 @@ exports.createTransaction = async (req, res) => {
     }
 };
 
-// ✅ Get All Transactions with Category Details
 exports.getAllTransactions = async (req, res) => {
     try {
         const transactions = await Transaction.find({ user: req.user })
-            .populate("category", "name type") // ✅ Populate category name & type
+            .populate("category", "name type") 
             .sort({ date: -1 });
 
         res.json(transactions);
@@ -61,7 +57,6 @@ exports.getAllTransactions = async (req, res) => {
     }
 };
 
-// ✅ Get Single Transaction with Category Details
 exports.getTransactionById = async (req, res) => {
     try {
         const transaction = await Transaction.findById(req.params.id).populate("category", "name type");
@@ -74,7 +69,6 @@ exports.getTransactionById = async (req, res) => {
     }
 };
 
-// ✅ Update a Transaction with Category Validation
 exports.updateTransaction = async (req, res) => {
     try {
         const transaction = await Transaction.findById(req.params.id);
@@ -84,7 +78,6 @@ exports.updateTransaction = async (req, res) => {
 
         const { amount, categoryId, description, isRecurring, recurringInterval } = req.body;
 
-        // ✅ Validate category change
         if (categoryId) {
             const category = await Category.findOne({ _id: categoryId, user: req.user });
             if (!category) {
@@ -96,7 +89,6 @@ exports.updateTransaction = async (req, res) => {
         if (amount) transaction.amount = amount;
         if (description) transaction.description = description;
 
-        // ✅ Handle Recurring Transactions Update
         if (isRecurring !== undefined) {
             transaction.isRecurring = isRecurring;
             transaction.recurringInterval = isRecurring ? recurringInterval : null;
@@ -110,7 +102,6 @@ exports.updateTransaction = async (req, res) => {
     }
 };
 
-// ✅ Delete a Transaction
 exports.deleteTransaction = async (req, res) => {
     try {
         const transaction = await Transaction.findById(req.params.id);
@@ -125,7 +116,6 @@ exports.deleteTransaction = async (req, res) => {
     }
 };
 
-// ✅ Get Upcoming Recurring Transactions
 exports.getUpcomingRecurringTransactions = async (req, res) => {
     try {
         const upcomingTransactions = await Transaction.find({
@@ -140,7 +130,6 @@ exports.getUpcomingRecurringTransactions = async (req, res) => {
     }
 };
 
-// ✅ Run Recurring Transaction Processing
 exports.runRecurringTransactions = async (req, res) => {
     try {
         await processRecurringTransactions();
@@ -150,7 +139,6 @@ exports.runRecurringTransactions = async (req, res) => {
     }
 };
 
-// ✅ Helper Function: Calculate Next Recurring Date
 const calculateNextDate = (interval) => {
     const now = new Date();
     if (interval === "daily") return new Date(now.setDate(now.getDate() + 1));

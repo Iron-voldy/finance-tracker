@@ -1,7 +1,6 @@
 const Currency = require("../models/currencyModel");
 const { convertAmountToCurrency, getExchangeRates } = require("../services/currencyService");
 
-// ✅ Set Preferred Currency
 exports.updatePreferredCurrency = async (req, res) => {
     try {
         let currency = await Currency.findOne({ user: req.user });
@@ -19,12 +18,11 @@ exports.updatePreferredCurrency = async (req, res) => {
     }
 };
 
-// ✅ Get Preferred Currency
 exports.getPreferredCurrency = async (req, res) => {
     try {
         const currency = await Currency.findOne({ user: req.user });
         if (!currency) {
-            return res.json({ preferredCurrency: "USD" }); // Default to USD
+            return res.json({ preferredCurrency: "USD" }); 
         }
         res.json({ preferredCurrency: currency.preferredCurrency });
     } catch (error) {
@@ -32,7 +30,6 @@ exports.getPreferredCurrency = async (req, res) => {
     }
 };
 
-// ✅ Convert an Amount to User's Preferred Currency
 exports.convertToPreferredCurrency = async (req, res) => {
     try {
         const { amount, fromCurrency } = req.body;

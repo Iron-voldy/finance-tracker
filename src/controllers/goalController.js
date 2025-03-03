@@ -1,7 +1,6 @@
 const Goal = require("../models/goalModel");
 const { checkGoalStatus } = require("../services/goalService");
 
-// ✅ Create a Savings Goal
 exports.createGoal = async (req, res) => {
     try {
         const { name, targetAmount, deadline } = req.body;
@@ -13,7 +12,6 @@ exports.createGoal = async (req, res) => {
     }
 };
 
-// ✅ Get All User Goals
 exports.getGoals = async (req, res) => {
     try {
         const goals = await Goal.find({ user: req.user }).sort({ deadline: 1 });
@@ -23,7 +21,6 @@ exports.getGoals = async (req, res) => {
     }
 };
 
-// ✅ Update a Goal
 exports.updateGoal = async (req, res) => {
     try {
         const goal = await Goal.findById(req.params.id);
@@ -42,7 +39,6 @@ exports.updateGoal = async (req, res) => {
     }
 };
 
-// ✅ Delete a Goal
 exports.deleteGoal = async (req, res) => {
     try {
         const goal = await Goal.findById(req.params.id);
@@ -57,7 +53,6 @@ exports.deleteGoal = async (req, res) => {
     }
 };
 
-// ✅ Allocate Money to a Goal
 exports.allocateSavingsToGoal = async (req, res) => {
     try {
         const { amount } = req.body;
@@ -69,7 +64,6 @@ exports.allocateSavingsToGoal = async (req, res) => {
         goal.savedAmount += amount;
         await goal.save();
 
-        // ✅ Check if goal is reached
         await checkGoalStatus(goal);
 
         res.json({ msg: "Savings allocated successfully", goal });

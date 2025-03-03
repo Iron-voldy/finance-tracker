@@ -1,6 +1,5 @@
 const Notification = require("../models/notificationModel");
 
-// ✅ Get All Notifications for a User
 exports.getUserNotifications = async (req, res) => {
     try {
         const notifications = await Notification.find({ user: req.user }).sort({ createdAt: -1 });
@@ -10,7 +9,6 @@ exports.getUserNotifications = async (req, res) => {
     }
 };
 
-// ✅ Mark Notification as Read
 exports.markNotificationAsRead = async (req, res) => {
     try {
         await Notification.findByIdAndUpdate(req.params.id, { read: true });
@@ -20,7 +18,6 @@ exports.markNotificationAsRead = async (req, res) => {
     }
 };
 
-// ✅ Delete Notification
 exports.deleteNotification = async (req, res) => {
     try {
         await Notification.findByIdAndDelete(req.params.id);

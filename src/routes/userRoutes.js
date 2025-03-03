@@ -4,8 +4,8 @@ const { protect } = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
-router.get("/me", protect, getUserProfile);      // Get user profile
-router.put("/update", protect, updateUserProfile); // Update user profile
-router.delete("/delete", protect, deleteUserProfile); // Delete user account
+router.get("/me", protect, getUserProfile);      
+router.put("/update", protect, updateUserProfile); 
+router.delete("/delete", protect, deleteUserProfile); 
 
 module.exports = router;

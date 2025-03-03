@@ -3,7 +3,6 @@ const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 const ExcelJS = require("exceljs");
 const fs = require("fs");
 
-// ✅ Export Transactions as CSV
 exports.exportTransactionsToCSV = async (user) => {
     const transactions = await Transaction.find({ user: user._id }).populate("category", "name type");
 
@@ -33,7 +32,6 @@ exports.exportTransactionsToCSV = async (user) => {
     return filePath;
 };
 
-// ✅ Export Transactions as Excel
 exports.exportTransactionsToExcel = async (user) => {
     const transactions = await Transaction.find({ user: user._id }).populate("category", "name type");
 

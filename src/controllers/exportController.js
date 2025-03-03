@@ -1,6 +1,5 @@
 const { exportTransactionsToCSV, exportTransactionsToExcel } = require("../services/exportService");
 
-// ✅ Export Transactions as CSV
 exports.downloadCSV = async (req, res) => {
     try {
         const filePath = await exportTransactionsToCSV(req.user);
@@ -12,7 +11,6 @@ exports.downloadCSV = async (req, res) => {
     }
 };
 
-// ✅ Export Transactions as Excel
 exports.downloadExcel = async (req, res) => {
     try {
         const filePath = await exportTransactionsToExcel(req.user);

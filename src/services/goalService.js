@@ -1,7 +1,6 @@
 const Goal = require("../models/goalModel");
 const { createNotification } = require("./notificationService");
 
-// ✅ Check If Goal Is Reached
 exports.checkGoalStatus = async (goal) => {
     if (goal.savedAmount >= goal.targetAmount) {
         goal.status = "completed";

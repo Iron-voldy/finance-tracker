@@ -2,10 +2,8 @@ const Transaction = require("../models/transactionModel");
 const Category = require("../models/categoryModel");
 const mongoose = require("mongoose");
 
-// ✅ Get Monthly Expense Trends
 exports.getExpenseTrends = async (user) => {
     try {
-        // Validate user object
         if (!user || !user._id) {
             console.error("Invalid user object:", user);
             return [];
@@ -13,17 +11,14 @@ exports.getExpenseTrends = async (user) => {
         
         console.log("User in expense trends service:", user._id);
         
-        // Convert to ObjectId
         const userObjectId = new mongoose.Types.ObjectId(user._id);
         
-        // Calculate date 6 months ago
         const sixMonthsAgo = new Date();
         sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
-        sixMonthsAgo.setDate(1); // First day of that month
+        sixMonthsAgo.setDate(1); 
         
         console.log("Looking for transactions since:", sixMonthsAgo);
         
-        // First, check if any expense transactions exist for this user
         const expenseCount = await Transaction.countDocuments({
             user: userObjectId,
             type: "expense"
@@ -35,7 +30,6 @@ exports.getExpenseTrends = async (user) => {
             return [];
         }
         
-        // Run the aggregation
         const result = await Transaction.aggregate([
             {
                 $match: {
@@ -71,24 +65,19 @@ exports.getExpenseTrends = async (user) => {
     }
 };
 
-// ✅ Get Monthly Income Trends
 exports.getIncomeTrends = async (user) => {
     try {
-        // Validate user object
         if (!user || !user._id) {
             console.error("Invalid user object:", user);
             return [];
         }
         
-        // Convert to ObjectId
         const userObjectId = new mongoose.Types.ObjectId(user._id);
         
-        // Calculate date 6 months ago
         const sixMonthsAgo = new Date();
         sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
-        sixMonthsAgo.setDate(1); // First day of that month
+        sixMonthsAgo.setDate(1); 
         
-        // First, check if any income transactions exist for this user
         const incomeCount = await Transaction.countDocuments({
             user: userObjectId,
             type: "income"
@@ -100,7 +89,6 @@ exports.getIncomeTrends = async (user) => {
             return [];
         }
         
-        // Run the aggregation
         const result = await Transaction.aggregate([
             {
                 $match: {
@@ -136,19 +124,15 @@ exports.getIncomeTrends = async (user) => {
     }
 };
 
-// ✅ Detect Unusual Spending
 exports.detectUnusualSpending = async (user) => {
     try {
-        // Validate user object
         if (!user || !user._id) {
             console.error("Invalid user object:", user);
             return [];
         }
         
-        // Convert to ObjectId
         const userObjectId = new mongoose.Types.ObjectId(user._id);
         
-        // Calculate date ranges
         const now = new Date();
         const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
         const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
@@ -156,7 +140,6 @@ exports.detectUnusualSpending = async (user) => {
         console.log("Last month:", lastMonth);
         console.log("This month:", thisMonth);
         
-        // Get category data for last month
         const lastMonthData = await Transaction.aggregate([
             { 
                 $match: { 
@@ -187,7 +170,6 @@ exports.detectUnusualSpending = async (user) => {
             }
         ]);
         
-        // Get category data for this month
         const thisMonthData = await Transaction.aggregate([
             { 
                 $match: { 
@@ -221,7 +203,6 @@ exports.detectUnusualSpending = async (user) => {
         console.log("Last month spending data:", lastMonthData);
         console.log("This month spending data:", thisMonthData);
         
-        // Compare spending and find unusual patterns
         const unusualSpending = [];
         
         thisMonthData.forEach((thisMonthExpense) => {

@@ -1,7 +1,6 @@
 const Budget = require("../models/budgetModel");
 const Transaction = require("../models/transactionModel");
 
-// ✅ Create a Budget
 exports.createBudget = async (req, res) => {
     try {
         const { categoryId, amount } = req.body;
@@ -14,7 +13,6 @@ exports.createBudget = async (req, res) => {
     }
 };
 
-// ✅ Get All Budgets
 exports.getBudgets = async (req, res) => {
     try {
         const budgets = await Budget.find({ user: req.user }).populate("category", "name");
@@ -24,7 +22,6 @@ exports.getBudgets = async (req, res) => {
     }
 };
 
-// ✅ Delete a Budget
 exports.deleteBudget = async (req, res) => {
     try {
         await Budget.findByIdAndDelete(req.params.id);

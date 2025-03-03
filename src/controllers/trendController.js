@@ -1,9 +1,8 @@
 const { getExpenseTrends, getIncomeTrends, detectUnusualSpending } = require("../services/trendService");
 
-// ✅ Get Monthly Expense Trends
 exports.getExpenseTrends = async (req, res) => {
     try {
-        // Log user in controller to verify it's correctly set
+       
         console.log("User in expense trend controller:", {
             id: req.user._id,
             name: req.user.name
@@ -17,7 +16,6 @@ exports.getExpenseTrends = async (req, res) => {
     }
 };
 
-// ✅ Get Monthly Income Trends
 exports.getIncomeTrends = async (req, res) => {
     try {
         console.log("User in income trend controller:", {
@@ -33,7 +31,6 @@ exports.getIncomeTrends = async (req, res) => {
     }
 };
 
-// ✅ Detect Unusual Spending
 exports.getUnusualSpending = async (req, res) => {
     try {
         console.log("User in unusual spending controller:", {

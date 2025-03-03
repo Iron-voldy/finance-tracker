@@ -1,6 +1,5 @@
 const { getMonthlySpending } = require("../services/reportService");
 
-// ✅ Get Monthly Spending Report
 exports.getMonthlySpendingReport = async (req, res) => {
     try {
         const report = await getMonthlySpending(req.user);

@@ -1,6 +1,5 @@
 const Transaction = require("../models/transactionModel");
 
-// ✅ Process Recurring Transactions
 exports.processRecurringTransactions = async () => {
     const now = new Date();
     
@@ -25,7 +24,6 @@ exports.processRecurringTransactions = async () => {
     }
 };
 
-// ✅ Helper Function: Calculate Next Recurring Date
 const calculateNextDate = (interval) => {
     const now = new Date();
     if (interval === "daily") return new Date(now.setDate(now.getDate() + 1));

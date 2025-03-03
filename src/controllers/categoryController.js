@@ -1,11 +1,9 @@
 const Category = require("../models/categoryModel");
 
-// ✅ Create a Category
 exports.createCategory = async (req, res) => {
     try {
         const { name, type } = req.body;
 
-        // Check if category already exists for the user
         const existingCategory = await Category.findOne({ user: req.user, name });
         if (existingCategory) {
             return res.status(400).json({ msg: "Category already exists" });
@@ -19,7 +17,6 @@ exports.createCategory = async (req, res) => {
     }
 };
 
-// ✅ Get All Categories for a User
 exports.getCategories = async (req, res) => {
     try {
         const categories = await Category.find({ user: req.user }).sort({ name: 1 });
@@ -29,7 +26,6 @@ exports.getCategories = async (req, res) => {
     }
 };
 
-// ✅ Update a Category
 exports.updateCategory = async (req, res) => {
     try {
         const category = await Category.findById(req.params.id);
@@ -45,7 +41,6 @@ exports.updateCategory = async (req, res) => {
     }
 };
 
-// ✅ Delete a Category
 exports.deleteCategory = async (req, res) => {
     try {
         const category = await Category.findById(req.params.id);

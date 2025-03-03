@@ -1,7 +1,6 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 
-// ✅ Get Logged-in User Profile
 exports.getUserProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user).select("-password");
@@ -13,7 +12,6 @@ exports.getUserProfile = async (req, res) => {
     }
 };
 
-// ✅ Update User Profile
 exports.updateUserProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user);
@@ -34,7 +32,6 @@ exports.updateUserProfile = async (req, res) => {
     }
 };
 
-// ✅ Delete User Account
 exports.deleteUserProfile = async (req, res) => {
     try {
         await User.findByIdAndDelete(req.user);
