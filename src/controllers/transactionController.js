@@ -1,13 +1,14 @@
 const Transaction = require("../models/transactionModel");
 const Category = require("../models/categoryModel");
 const { processRecurringTransactions } = require("../services/transactionService");
+const { createNotification, checkBudgetExceeded } = require("../services/notificationService");
+const Budget = require("../models/budgetModel");
 
 // ✅ Create a New Transaction with Category Validation
 exports.createTransaction = async (req, res) => {
     try {
         const { type, amount, categoryId, description, isRecurring, recurringInterval } = req.body;
 
-        // ✅ Validate if the category exists for this user
         const category = await Category.findOne({ _id: categoryId, user: req.user });
         if (!category) {
             return res.status(404).json({ msg: "Category not found" });
@@ -17,14 +18,30 @@ exports.createTransaction = async (req, res) => {
             user: req.user,
             type,
             amount,
-            category: categoryId, // ✅ Store category as ObjectId
+            category: categoryId,
             description,
             isRecurring,
             recurringInterval,
-            nextRecurringDate: isRecurring ? calculateNextDate(recurringInterval) : null // ✅ Set next recurring date
+            nextRecurringDate: isRecurring ? calculateNextDate(recurringInterval) : null
         });
 
         await transaction.save();
+
+        // ✅ Send Income Notification
+        if (type === "income") {
+            await createNotification(req.user, `You received an income of $${amount}.`, "income");
+        }
+
+        // ✅ Check Budget Exceeded
+        if (type === "expense") {
+            const budget = await Budget.findOne({ user: req.user, category: categoryId });
+            if (budget) {
+                budget.spent += amount;
+                await budget.save();
+                await checkBudgetExceeded(req.user, category.name, budget.spent, budget.amount);
+            }
+        }
+
         res.status(201).json(transaction);
     } catch (error) {
         res.status(500).json({ msg: "Server Error", error: error.message });
