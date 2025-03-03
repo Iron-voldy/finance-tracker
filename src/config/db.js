@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-// Debugging: Print MONGO_URI to check if it's loaded
 console.log("MongoDB URI:", process.env.MONGO_URI);
 
 const connectDB = async () => {
