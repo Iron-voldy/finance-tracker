@@ -20,6 +20,36 @@ connectDB();
 const app = express();
 app.use(express.json());
 
+// Add this right after connectDB() in server.js
+const dropLegacyIndex = async () => {
+    try {
+      // Get the Categories model
+      const Category = require('./models/categoryModel');
+      
+      // Access the MongoDB collection directly
+      const collection = Category.collection;
+      
+      // Get all indexes on the collection
+      const indexes = await collection.indexes();
+      
+      // Check if the name_1 index exists
+      const nameIndex = indexes.find(index => 
+        index.name === 'name_1' && index.unique === true
+      );
+      
+      if (nameIndex) {
+        console.log('Found legacy unique index on name field, dropping it...');
+        await collection.dropIndex('name_1');
+        console.log('Legacy index dropped successfully');
+      }
+    } catch (error) {
+      console.error('Error handling legacy index:', error);
+    }
+  };
+  
+  // Call the function
+  dropLegacyIndex();
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
