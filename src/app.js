@@ -5,7 +5,13 @@ const userRoutes = require("./routes/userRoutes");
 const transactionRoutes = require("./routes/transactionRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const budgetRoutes = require("./routes/budgetRoutes");
-// Import all other routes as needed
+const notificationRoutes = require("./routes/notificationRoutes");
+const reportRoutes = require("./routes/reportRoutes");
+const currencyRoutes = require("./routes/currencyRoutes");
+const goalRoutes = require("./routes/goalRoutes");
+const trendRoutes = require("./routes/trendRoutes");
+const exportRoutes = require("./routes/exportRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 
 dotenv.config();
 const app = express();
@@ -17,6 +23,12 @@ app.use("/api/users", userRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/budgets", budgetRoutes);
-// Add all other routes
+app.use("/api/notifications", notificationRoutes);
+app.use("/api/reports", reportRoutes);
+app.use("/api/currency", currencyRoutes);
+app.use("/api/goals", goalRoutes);
+app.use("/api/trends", trendRoutes);
+app.use("/api/export", exportRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 module.exports = app;

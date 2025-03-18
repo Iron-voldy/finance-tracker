@@ -59,11 +59,16 @@ exports.getAllTransactions = async (req, res) => {
 
 exports.getTransactionById = async (req, res) => {
     try {
-        const transaction = await Transaction.findById(req.params.id).populate("category", "name type");
-        if (!transaction || transaction.user.toString() !== req.user) {
+        const transaction = await Transaction.findOne({
+            _id: req.params.id,
+            user: req.user
+        }).populate("category", "name type");
+        
+        if (!transaction) {
             return res.status(404).json({ msg: "Transaction not found" });
         }
-        res.json(transaction);
+        
+        res.status(200).json(transaction);
     } catch (error) {
         res.status(500).json({ msg: "Server Error", error: error.message });
     }
@@ -71,8 +76,12 @@ exports.getTransactionById = async (req, res) => {
 
 exports.updateTransaction = async (req, res) => {
     try {
-        const transaction = await Transaction.findById(req.params.id);
-        if (!transaction || transaction.user.toString() !== req.user) {
+        const transaction = await Transaction.findOne({
+            _id: req.params.id,
+            user: req.user
+        });
+        
+        if (!transaction) {
             return res.status(404).json({ msg: "Transaction not found" });
         }
 
@@ -96,7 +105,7 @@ exports.updateTransaction = async (req, res) => {
         }
 
         await transaction.save();
-        res.json({ msg: "Transaction updated successfully", transaction });
+        res.status(200).json({ msg: "Transaction updated successfully", transaction });
     } catch (error) {
         res.status(500).json({ msg: "Server Error", error: error.message });
     }
@@ -104,13 +113,17 @@ exports.updateTransaction = async (req, res) => {
 
 exports.deleteTransaction = async (req, res) => {
     try {
-        const transaction = await Transaction.findById(req.params.id);
-        if (!transaction || transaction.user.toString() !== req.user) {
+        const transaction = await Transaction.findOne({
+            _id: req.params.id,
+            user: req.user
+        });
+        
+        if (!transaction) {
             return res.status(404).json({ msg: "Transaction not found" });
         }
 
         await transaction.deleteOne();
-        res.json({ msg: "Transaction deleted successfully" });
+        res.status(200).json({ msg: "Transaction deleted successfully" });
     } catch (error) {
         res.status(500).json({ msg: "Server Error", error: error.message });
     }

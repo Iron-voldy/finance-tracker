@@ -4,7 +4,13 @@ const { checkGoalStatus } = require("../services/goalService");
 exports.createGoal = async (req, res) => {
     try {
         const { name, targetAmount, deadline } = req.body;
-        const goal = new Goal({ user: req.user, name, targetAmount, deadline });
+        const goal = new Goal({ 
+            user: req.user, 
+            name, 
+            targetAmount, 
+            deadline 
+        });
+        
         await goal.save();
         res.status(201).json(goal);
     } catch (error) {
@@ -15,7 +21,7 @@ exports.createGoal = async (req, res) => {
 exports.getGoals = async (req, res) => {
     try {
         const goals = await Goal.find({ user: req.user }).sort({ deadline: 1 });
-        res.json(goals);
+        res.status(200).json(goals);
     } catch (error) {
         res.status(500).json({ msg: "Server Error", error: error.message });
     }
@@ -23,8 +29,12 @@ exports.getGoals = async (req, res) => {
 
 exports.updateGoal = async (req, res) => {
     try {
-        const goal = await Goal.findById(req.params.id);
-        if (!goal || goal.user.toString() !== req.user) {
+        const goal = await Goal.findOne({
+            _id: req.params.id,
+            user: req.user
+        });
+        
+        if (!goal) {
             return res.status(404).json({ msg: "Goal not found" });
         }
 
@@ -33,7 +43,7 @@ exports.updateGoal = async (req, res) => {
         goal.deadline = req.body.deadline || goal.deadline;
 
         await goal.save();
-        res.json({ msg: "Goal updated successfully", goal });
+        res.status(200).json({ msg: "Goal updated successfully", goal });
     } catch (error) {
         res.status(500).json({ msg: "Server Error", error: error.message });
     }
@@ -41,13 +51,17 @@ exports.updateGoal = async (req, res) => {
 
 exports.deleteGoal = async (req, res) => {
     try {
-        const goal = await Goal.findById(req.params.id);
-        if (!goal || goal.user.toString() !== req.user) {
+        const goal = await Goal.findOne({
+            _id: req.params.id,
+            user: req.user
+        });
+        
+        if (!goal) {
             return res.status(404).json({ msg: "Goal not found" });
         }
 
         await goal.deleteOne();
-        res.json({ msg: "Goal deleted successfully" });
+        res.status(200).json({ msg: "Goal deleted successfully" });
     } catch (error) {
         res.status(500).json({ msg: "Server Error", error: error.message });
     }
@@ -56,8 +70,12 @@ exports.deleteGoal = async (req, res) => {
 exports.allocateSavingsToGoal = async (req, res) => {
     try {
         const { amount } = req.body;
-        const goal = await Goal.findById(req.params.id);
-        if (!goal || goal.user.toString() !== req.user) {
+        const goal = await Goal.findOne({
+            _id: req.params.id,
+            user: req.user
+        });
+        
+        if (!goal) {
             return res.status(404).json({ msg: "Goal not found" });
         }
 
@@ -66,7 +84,7 @@ exports.allocateSavingsToGoal = async (req, res) => {
 
         await checkGoalStatus(goal);
 
-        res.json({ msg: "Savings allocated successfully", goal });
+        res.status(200).json({ msg: "Savings allocated successfully", goal });
     } catch (error) {
         res.status(500).json({ msg: "Server Error", error: error.message });
     }

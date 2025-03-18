@@ -15,13 +15,15 @@ exports.protect = async (req, res, next) => {
 
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            
             const user = await User.findById(decoded.id).select("-password");
 
             if (!user) {
                 return res.status(401).json({ msg: "User not found" });
             }
 
-            req.user = user;
+            // Store the user ID as a string for easier comparison in controllers
+            req.user = user._id.toString();
             next();
         } catch (err) {
             res.status(401).json({ msg: "Token is not valid" });
